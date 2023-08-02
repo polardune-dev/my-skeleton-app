@@ -7,6 +7,7 @@
 	import '../app.postcss';
 	import { AppShell, AppBar } from '@skeletonlabs/skeleton';
 	import { AppRail, AppRailTile, AppRailAnchor } from '@skeletonlabs/skeleton';
+	import { LightSwitch } from '@skeletonlabs/skeleton';
 </script>
 
 <AppShell>
@@ -14,6 +15,7 @@
 		<AppBar>
 			<svelte:fragment slot="lead">Logo</svelte:fragment>
 			<svelte:fragment slot="trail">
+				<LightSwitch />
 				<a class="btn" href="https://help.sample.com" target="_blank" rel="noreferrer">Help</a>
 			</svelte:fragment>
 		</AppBar>
