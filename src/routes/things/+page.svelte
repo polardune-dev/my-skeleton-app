@@ -13,46 +13,35 @@
 		{ position: 5, name: 'Boron', weight: 10.811, symbol: 'B' }
 	];
 
-	let pageSourceData = sourceData;
-
-	const tableSimple: TableSource = {
-		// A list of heading labels.
-		head: ['Name', 'Symbol', 'Weight'],
-		// The data visibly shown in your table body UI.
-		body: tableMapperValues(pageSourceData, ['name', 'symbol', 'weight']),
-		// Optional: The data returned when interactive is enabled and a row is clicked.
-		meta: tableMapperValues(pageSourceData, ['position', 'name', 'symbol', 'weight']),
-		// Optional: A list of footer labels.
-		foot: ['Total', '', '<code class="code">5</code>']
-	};
-
 	// PaginatorSettings
-	let page = {
+	$: page = {
 		offset: 0,
-		limit: 2,
+		limit: 3,
 		size: sourceData.length,
-		amounts: [1,2,5,10],
+		amounts: [3,5,10],
 	};
 
-	if (page.limit < page.size) {
-		//pageSourceData = 
-	}
+	let tableHeaders = ['Name', 'Symbol', 'Weight'];
+	$: pageSourceData = tableMapperValues(
+			sourceData.slice (
+			page.offset * page.limit,
+			page.offset * page.limit + page.limit
+		), ['name', 'symbol', 'weight']
+	);
+	$: meta = tableMapperValues(pageSourceData, ['position', 'name', 'symbol', 'weight']);
 
-	function onPageChange(e: CustomEvent): void {
-		console.log('event:page', e.detail);
-		console.log('event:page offset=%d limit=%d', page.offset, page.limit );
-	}
-
-	function onAmountChange(e: CustomEvent): void {
-		console.log('event:amount', e.detail);
-		console.log('event:page offset=%d limit=%d', page.offset, page.limit );
-	}
+	$: tableSimple = {
+		head: tableHeaders,
+		body: pageSourceData,
+		// Optional: The data returned when interactive is enabled and a row is clicked.
+		meta: meta
+	};
 </script>
 
-<div class="container">
-	<div class="space-y-5 space-x-5">
+<div class="container pl-5 pt-5">
+	<div class="space-y-5">
 		<h1 class="h1">Things</h1>
 		<Table source={tableSimple} />
-		<Paginator amountText="things" bind:settings={page} on:page={onPageChange} on:amount={onAmountChange}></Paginator>
+		<Paginator amountText="things" bind:settings={page}></Paginator>
 	</div>
 </div>
