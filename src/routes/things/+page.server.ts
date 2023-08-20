@@ -24,15 +24,14 @@ export interface Products {
   } 
 
 export async function load( {fetch, url}) {
-  console.log('url.searchParams[page]='+url.searchParams.get('page'));
-  console.log('url.searchParams[limit]='+url.searchParams.get('limit'));
-
-  const page = url.searchParams.get('page');
-  const limit = url.searchParams.get('limit');
+  let page = url.searchParams.get('page');
+  let limit = url.searchParams.get('limit');
+  if (!page) { page = '0'};
+  if (!limit) { limit = '10'};
   const skip = Number(page) * Number(limit);
-  console.log('skip='+skip);
-  
+
   const response = await fetch('https://dummyjson.com/products?limit='+limit+'&skip='+skip);
   const res = await response.json() as Products;
+  res.limit = Number(limit);
   return res;
 }

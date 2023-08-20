@@ -11,10 +11,13 @@
 
 	// PaginatorSettings
 	$: page = {
-		offset: data.skip,
+		offset: data.skip / data.limit,
 		limit: data.limit,
 		size: data.total,
 		amounts: [3,5,10, 30],
+	};
+	$: if (!page.amounts.includes(page.limit) ) {
+		page.amounts.unshift (page.limit)
 	};
 
 	let tableHeaders = ['Name', 'Brand', 'Price'];
@@ -32,24 +35,21 @@
 
 
 	function onPageChange(e: CustomEvent): void {
-		console.log('event:page', e.detail);
+		// console.log('event:page', e.detail);
 		goto ('?page='+e.detail+'&limit='+page.limit);
 	}
 
 	function onAmountChange(e: CustomEvent): void {
-		console.log('event:amount', e.detail);
-		const pageNum = page.offset / e.detail;
-		goto ('?page='+pageNum+'&limit='+e.detail);
+		// console.log('event:amount', e.detail);
+		goto ('?page='+page.offset+'&limit='+e.detail);
 	}
-
-	$: console.log ('page='+JSON.stringify(page));
 
 </script>
 
 <div class="container pl-5 pt-5">
 	<div class="space-y-5">
 		<h1 class="h1 text-primary-500 ">Things</h1>
+		<Paginator amountText="things" showNumerals bind:settings={page} on:page={onPageChange} on:amount={onAmountChange}></Paginator>
 		<Table source={tableSimple} />
-		<Paginator amountText="things" bind:settings={page} on:page={onPageChange} on:amount={onAmountChange}></Paginator>
 	</div>
 </div>
